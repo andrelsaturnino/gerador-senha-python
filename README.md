@@ -1,4 +1,5 @@
-🔐 Gerador e Cofre de Senhas
+/b Gerador e Cofre de Senhas
+ 
 Olá! Este é um dos meus primeiros projetos web com Python. Criei um gerador de senhas simples que também funciona como um pequeno cofre para guardar as credenciais de forma segura.
 
 💻 O que eu usei?
