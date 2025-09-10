@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador e Cofre de Senhas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1f2937, #0f172a);
+            color: #e5e7eb;
+        }
+        .container {
+            min-height: 100vh;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background-color: #8b5cf6;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.2s;
+            border: 2px solid #374151;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background-color: #8b5cf6;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.2s;
+            border: 2px solid #374151;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-6">
+
+    <div class="bg-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-2xl border border-gray-700">
+        <h1 class="text-3xl sm:text-4xl font-bold text-center text-white mb-4">Gerador de Senha Simples</h1>
+        <p class="text-center text-gray-400 mb-8 max-w-sm mx-auto">
+            Uma ferramenta que criei para gerar e salvar senhas de forma segura. O projeto ainda está em desenvolvimento!
+        </p>
+
+        <div class="space-y-6">
+            <!-- Comprimento da Senha -->
+            <div>
+                <label for="passwordLength" class="block text-sm font-medium text-gray-300">
+                    Comprimento da senha: <span id="lengthValue" class="font-bold text-white">12</span>
+                </label>
+                <input type="range" id="passwordLength" min="8" max="32" value="12" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer mt-2">
+            </div>
+
+            <!-- Tipos de Caracteres -->
+            <div class="grid grid-cols-2 gap-4">
+                <label class="flex items-center text-gray-300 cursor-pointer">
+                    <input type="checkbox" id="includeUppercase" class="form-checkbox h-4 w-4 text-purple-600 bg-gray-700 border-gray-600 rounded-md" checked>
+                    <span class="ml-2">Maiúsculas</span>
+                </label>
+                <label class="flex items-center text-gray-300 cursor-pointer">
+                    <input type="checkbox" id="includeLowercase" class="form-checkbox h-4 w-4 text-purple-600 bg-gray-700 border-gray-600 rounded-md" checked>
+                    <span class="ml-2">Minúsculas</span>
+                </label>
+                <label class="flex items-center text-gray-300 cursor-pointer">
+                    <input type="checkbox" id="includeNumbers" class="form-checkbox h-4 w-4 text-purple-600 bg-gray-700 border-gray-600 rounded-md" checked>
+                    <span class="ml-2">Números</span>
+                </label>
+                <label class="flex items-center text-gray-300 cursor-pointer">
+                    <input type="checkbox" id="includeSymbols" class="form-checkbox h-4 w-4 text-purple-600 bg-gray-700 border-gray-600 rounded-md" checked>
+                    <span class="ml-2">Símbolos</span>
+                </label>
+            </div>
+
+            <!-- Botão de Gerar -->
+            <button id="generateBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-300 ease-in-out transform hover:scale-105">
+                Gerar Senha
+            </button>
+        </div>
+
+        <div class="mt-8 space-y-4">
+            <!-- Senha Gerada -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Sua nova senha:</label>
+                <div class="relative">
+                    <input type="text" id="passwordOutput" readonly class="w-full bg-gray-700 text-white p-3 pr-12 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <button id="copyPasswordBtn" class="absolute inset-y-0 right-0 flex items-center pr-3 text-purple-400 hover:text-purple-300">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Senha Hasheada (SHA-256) -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Hash da senha (SHA-256):</label>
+                <div class="relative">
+                    <input type="text" id="hashedPasswordOutput" readonly class="w-full bg-gray-700 text-white text-xs sm:text-sm p-3 pr-12 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <button id="copyHashBtn" class="absolute inset-y-0 right-0 flex items-center pr-3 text-purple-400 hover:text-purple-300">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Formulário para Salvar Credenciais -->
+    <div class="bg-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-2xl mt-8 border border-gray-700">
+        <h2 class="text-2xl font-bold text-center text-white mb-6">Salvar credenciais</h2>
+        <form action="/" method="post" class="space-y-4">
+            <div>
+                <label for="site" class="block text-sm font-medium text-gray-300">Site/Serviço:</label>
+                <input type="text" id="site" name="site" required class="mt-1 block w-full bg-gray-700 text-white p-2 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-300">Usuário/Email:</label>
+                <input type="text" id="username" name="username" required class="mt-1 block w-full bg-gray-700 text-white p-2 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-300">Senha Gerada:</label>
+                <input type="text" id="password" name="password" required class="mt-1 block w-full bg-gray-700 text-white p-2 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-300 ease-in-out transform hover:scale-105">
+                Salvar Credencial
+            </button>
+        </form>
+    </div>
+
+    <!-- Lista de Credenciais Salvas -->
+    <div class="bg-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-2xl mt-8 border border-gray-700 mb-8">
+        <h2 class="text-2xl font-bold text-center text-white mb-6">Minhas credenciais salvas</h2>
+        {% if credentials %}
+        <ul class="space-y-4">
+            {% for credential in credentials %}
+            <li class="bg-gray-700 p-4 rounded-xl shadow-md flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                <div class="flex-grow">
+                    <p class="text-sm text-gray-400"><span class="font-bold text-white">Site:</span> {{ credential.site }}</p>
+                    <p class="text-sm text-gray-400"><span class="font-bold text-white">Usuário:</span> {{ credential.username }}</p>
+                    <p class="text-sm text-gray-400 break-all"><span class="font-bold text-white">Hash da Senha:</span> <span class="text-xs sm:text-sm font-mono">{{ credential.password_hash }}</span></p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-center text-gray-400">Ainda não há credenciais salvas.</p>
+        {% endif %}
+    </div>
+
+    <!-- Mensagem de feedback (modal) -->
+    <div id="messageBox" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 p-4 rounded-lg shadow-lg text-white font-bold text-center hidden">
+        <p id="messageText"></p>
+    </div>
+
+    <script>
+        // --- Referências de elementos HTML ---
+        const passwordLengthInput = document.getElementById('passwordLength');
+        const lengthValueSpan = document.getElementById('lengthValue');
+        const includeUppercaseCheckbox = document.getElementById('includeUppercase');
+        const includeLowercaseCheckbox = document.getElementById('includeLowercase');
+        const includeNumbersCheckbox = document.getElementById('includeNumbers');
+        const includeSymbolsCheckbox = document.getElementById('includeSymbols');
+        const generateBtn = document.getElementById('generateBtn');
+        const passwordOutput = document.getElementById('passwordOutput');
+        const hashedPasswordOutput = document.getElementById('hashedPasswordOutput');
+        const copyPasswordBtn = document.getElementById('copyPasswordBtn');
+        const copyHashBtn = document.getElementById('copyHashBtn');
+        const passwordInputForm = document.getElementById('password'); // Campo de senha no formulário
+        const messageBox = document.getElementById('messageBox');
+        const messageText = document.getElementById('messageText');
+
+        // --- Conjuntos de caracteres ---
+        const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+        const numberChars = '0123456789';
+        const symbolChars = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+
+        // --- Event Listener para o slider de comprimento ---
+        passwordLengthInput.addEventListener('input', () => {
+            lengthValueSpan.textContent = passwordLengthInput.value;
+        });
+
+        // --- Funções Principais ---
+
+        /**
+         * Gera uma senha aleatória com base nos critérios selecionados.
+         */
+        function generatePassword() {
+            let chars = '';
+            if (includeUppercaseCheckbox.checked) chars += uppercaseChars;
+            if (includeLowercaseCheckbox.checked) chars += lowercaseChars;
+            if (includeNumbersCheckbox.checked) chars += numberChars;
+            if (includeSymbolsCheckbox.checked) chars += symbolChars;
+
+            if (chars === '') {
+                showMessage("Por favor, selecione pelo menos um tipo de caractere!", "bg-red-500");
+                return '';
+            }
+
+            const length = parseInt(passwordLengthInput.value, 10);
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return password;
+        }
+
+        /**
+         * Realiza o hash (SHA-256) de uma string.
+         * @param {string} message - A string a ser hasheada.
+         * @returns {Promise<string>} O hash em formato hexadecimal.
+         */
+        async function hashString(message) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            
+            // Converte o buffer de hash para uma string hexadecimal
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
+        /**
+         * Exibe uma mensagem temporária na tela.
+         * @param {string} text - O texto da mensagem.
+         * @param {string} colorClass - A classe de cor do background (ex: "bg-green-500").
+         */
+        function showMessage(text, colorClass) {
+            messageText.textContent = text;
+            messageBox.className = `fixed top-5 left-1/2 -translate-x-1/2 z-50 p-4 rounded-lg shadow-lg text-white font-bold text-center ${colorClass}`;
+            messageBox.style.display = 'block';
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000);
+        }
+
+        /**
+         * Copia o texto para a área de transferência.
+         * @param {string} text - O texto a ser copiado.
+         */
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showMessage("Copiado para a área de transferência!", "bg-green-500");
+            }).catch(err => {
+                console.error('Falha ao copiar:', err);
+                showMessage("Erro ao copiar.", "bg-red-500");
+            });
+        }
+
+        // --- Event Listeners dos botões ---
+        generateBtn.addEventListener('click', async () => {
+            const password = generatePassword();
+            if (password) {
+                passwordOutput.value = password;
+                passwordInputForm.value = password; // Preenche o campo do formulário
+                const hashedPassword = await hashString(password);
+                hashedPasswordOutput.value = hashedPassword;
+            } else {
+                passwordOutput.value = '';
+                hashedPasswordOutput.value = '';
+                passwordInputForm.value = '';
+            }
+        });
+
+        copyPasswordBtn.addEventListener('click', () => {
+            if (passwordOutput.value) {
+                copyToClipboard(passwordOutput.value);
+            }
+        });
+
+        copyHashBtn.addEventListener('click', () => {
+            if (hashedPasswordOutput.value) {
+                copyToClipboard(hashedPasswordOutput.value);
+            }
+        });
+    </script>
+</body>
+</html>
