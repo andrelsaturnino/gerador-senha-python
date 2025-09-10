@@ -10,7 +10,7 @@ Olá! Este é um dos meus primeiros projetos web com Python. Criei um gerador de
 
 + **SQLite:** Um banco de dados simples para guardar as senhas.
 
-+ **HTML & Tailwind CSS:** Para o design da página.
++ **HTML & CSS:** Para o design da página.
 
 + **JavaScript:** Para fazer o gerador de senhas funcionar direto no navegador.
 
