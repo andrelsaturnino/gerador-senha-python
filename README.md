@@ -30,7 +30,7 @@ Você pode testar o aplicativo na sua máquina seguindo estes passos:
 
 Clone o projeto:
 
-git clone [https://github.com/andrelsaturnino/gerador-senha-python.git](https://github.com/andrelsaturnino/gerador-senha-python.git))
+git clone [https://github.com/andrelsaturnino/gerador-senha-python.git](https://github.com/andrelsaturnino/gerador-senha-python.git)
 cd gerador-senha-python
 
 Instale o que precisa:
