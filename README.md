@@ -47,6 +47,6 @@ Abra seu navegador e digite: http://127.0.0.1:5000/
 Contato
 Se você tiver alguma dica ou feedback, por favor, me mande uma mensagem!
 
-Seu Nome: [Link para o seu LinkedIn](https://www.linkedin.com/in/andresaturnino/)
+Andre Saturnino: [Link para o seu LinkedIn](https://www.linkedin.com/in/andresaturnino/)
 
 Email: andre.l.saturnino2@gmail.com
