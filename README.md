@@ -4,9 +4,9 @@ Olá! Este é um dos meus primeiros projetos web com Python. Criei um gerador de
 
 **O que eu usei?**
  
-**Python:** Para fazer a mágica do backend.
++ **Python:** Para fazer a mágica do backend.
 
-**Flask:** Ajuda a conectar o Python com a página web.
++ **Flask:** Ajuda a conectar o Python com a página web.
 
 **SQLite:** Um banco de dados simples para guardar as senhas.
 
